@@ -69,5 +69,9 @@ def main(path, out_dir='/tmp', sep='\t', chunksize=1):
         parallelize(func, paths, chunksize=chunksize)
 
 
-if __name__ == '__main__':
+def cli():
     fire.Fire(main)
+
+
+if __name__ == '__main__':
+    cli()
