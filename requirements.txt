@@ -1,0 +1,3 @@
+fire==0.3.*
+htools==6.3.*
+pandas==1.1.*

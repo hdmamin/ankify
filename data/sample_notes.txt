@@ -1,0 +1,16 @@
+Notes: This sample file shows how to take notes that can be converted to Anki decks. Questions must start with '_Q:' and answers must start with '_A:' on the line directly below. There must be an empty line before each question. The actual information here is just filler content - do not use it as an actual source on anything. Probably best to avoid using the `sep` character you'll use when generating a file with `ankify` (a tab by default). NOTE TO SELF: try to write questions AFTER reading/watching the source in question (or a chunk of it; trying to encourage retrieval. Can go back and fill in details as necessary).
+
+_Q: What are some weaknesses/limitations of GANs?
+_A:
+- GANs can be slow and/or unstable to train (e.g. mode collapse).
+- GANs are not inherenetly reversible (unlike VAEs can't convert any image to its latent vector)
+- GAN evaluation is still something of an open problem.
+
+_Q: What does CNN stand for in machine learning?
+_A:
+Convolutional Neural Network
+
+_Q: What is 1+2?
+_A:
+3
+
