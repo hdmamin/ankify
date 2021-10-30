@@ -13,7 +13,8 @@ from pathlib import Path
 from htools.core import load, parallelize
 
 
-def process_one_file(path, out_dir, sep):
+def process_one_file(path, out_dir, sep, q_char='#Q:', a_char='#A:',
+                     broken_q_chars=('#Q.', 'Q:', 'Q.')):
     """Extract q/a pairs from a single txt file and save it as a csv. Args are
     the same as the ones documented in `main`.
     """
@@ -22,12 +23,12 @@ def process_one_file(path, out_dir, sep):
     pairs = []
     msg_fmt = 'Found malformed Q/A: {chunk}'
     for chunk in text.split('\n\n'):
-        if chunk.startswith('_Q:'):
-            pair = chunk[3:].strip().replace('\n',
-                                                '<br/>').split('<br/>_A:')
+        if chunk.startswith(q_char):
+            pair = chunk[3:].strip().replace('\n', '<br/>')\
+                .split(f'<br/>{a_char}')
             assert len(pair) == 2, msg_fmt.format(chunk)
             pairs.append(pair)
-        elif chunk.startswith(('_Q.', 'Q:', 'Q.')):
+        elif chunk.startswith(broken_q_chars):
             raise RuntimeError(msg_fmt.format(chunk))
     length = len(pairs)
     print(f'Found {length} questions in {path}.')
@@ -40,7 +41,8 @@ def process_one_file(path, out_dir, sep):
     print(f'File saved to {out_path}.')
 
 
-def main(path, out_dir='/tmp', sep='\t', chunksize=1):
+def main(path, out_dir='/tmp', sep='\t', chunksize=1, q_char='#Q:',
+         a_char='#A:', broken_q_chars=('#Q.', 'Q:', 'Q.')):
     """Convert notes (in the form of 1 or more txt files) to csv's that can be
     imported into anki.
 
@@ -61,7 +63,8 @@ def main(path, out_dir='/tmp', sep='\t', chunksize=1):
         you might try a larger number.
     """
     path = Path(path)
-    func = partial(process_one_file, out_dir=out_dir, sep=sep)
+    func = partial(process_one_file, out_dir=out_dir, sep=sep, q_char=q_char,
+                   a_char=a_char, broken_q_chars=broken_q_chars)
     if path.is_file():
         func(path)
     else:
