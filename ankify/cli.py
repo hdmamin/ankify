@@ -3,6 +3,11 @@ Examples
 --------
 ankify ~/notes/dl/gans.txt
 ankify ~/notes/dl
+
+TODO
+-may want to group multiple notes files together. Could let user indicate an
+anki deck name at the top of the file, and if we process a dir then save only
+1 file per deck.
 """
 
 import fire
@@ -21,17 +26,19 @@ def process_one_file(path, out_dir, sep, q_char='#Q:', a_char='#A:',
     path = Path(path)
     text = load(path)
     pairs = []
-    msg_fmt = 'Found malformed Q/A: {chunk}'
+    msg_fmt = 'Found malformed Q/A in {path}: {chunk}'
     for chunk in text.split('\n\n'):
         if chunk.startswith(q_char):
             pair = chunk[3:].strip().replace('\n', '<br/>')\
                 .split(f'<br/>{a_char}')
-            assert len(pair) == 2, msg_fmt.format(chunk)
+            assert len(pair) == 2, msg_fmt.format(path=path, chunk=chunk)
             pairs.append(pair)
         elif chunk.startswith(broken_q_chars):
-            raise RuntimeError(msg_fmt.format(chunk))
+            raise RuntimeError(msg_fmt.format(path=path, chunk=chunk))
     length = len(pairs)
-    print(f'Found {length} questions in {path}.')
+    # Indent files with no Q/A pairs to make output easier to read.
+    prefix = '\t' * (1 - bool(length))
+    print(f'{prefix}Found {length} questions in {path}.')
     if not length:
         return
 
